@@ -1,2 +1,7 @@
 # bysj
-springboot 百度地图  Thymeleaf mybatis  轨迹跟踪  历史轨迹重现
+springboot 百度地图  Thymeleaf mybatis  轨迹跟踪  历史轨迹重现 RFID电子车牌
+判断轨迹点是否经过多个限行区域 经过就弹出警示框（alert）
+添加限行区域（限行信息的增删改查）
+个人信息管理
+历史轨迹查询（百度地图显示轨迹和限行区域的同时还判断是否在区域内）
+实时轨迹跟踪（同上）
