@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="userHeader(title)">
+    <meta charset="utf-8">
+    <title th:text="${title}">user</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <style type="text/css">
+        body {
+            background:url(../images/bg.jpg) top center no-repeat;
+            background-size:cover;
+        }
+    </style>
+</head>
+<body th:fragment="userNav">
+
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/user/index">基于RFID电子车牌的轨迹跟踪系统</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a th:href="@{/user/info}">个人信息</a></li>
+                <li class="active"><a th:href="@{/user/limitInfo}">限行信息</a></li>
+                <!--<li><a th:href="@{/user/record}">查询记录</a></li>-->
+                <!--<li><a th:href="@{/admin/userInfoSearch}">用户信息查询</a></li>-->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        轨迹信息
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a th:href="@{/user/historyTraceMap}">车辆历史轨迹</a></li>
+                        <li><a th:href="@{/user/traceTrackMap}">车辆实时轨迹</a></li>
+                        <li><a th:href="@{/user/historyTraceInfo}">车辆历史轨迹信息</a></li>
+
+                    </ul>
+                </li>
+                <!--<li ><a th:href="@{/user/record}">查询记录</a></li>-->
+            </ul>
+        </div>
+        <div class="right" style="float: right;background-color: white">
+            <span class="l">用户：
+               <strong class="font-bold" th:text="${session.user.getUsername()}">username</strong>
+            </span>
+            <span class="r"><a th:href="@{/login}" target="_top">注销</a></span>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.edu.cqu.bysj.rfidcar.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.edu.cqu.bysj.rfidcar.model.User">
+        <id column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="rfid_id" property="rfid_id" jdbcType="VARCHAR"/>
+        <result column="c_id" property="c_id" jdbcType="VARCHAR"/>
+        <result column="rolename" property="rolename" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--<insert id="insertOne" parameterType="com.edu.cqu.bysj.rfidcar.model.User">-->
+        <!--insert into user(username,password,rfid_id,c_id,rolename) VALUES (#{username},#{password},#{rfid_id},#{c_id},'USER');-->
+    <!--</insert>-->
+    <select id="findByUsername" resultType="com.edu.cqu.bysj.rfidcar.model.User" >
+        SELECT username,rfid_id as rfidid,c_id as cId,rolename from user WHERE username=#{username}
+    </select>
+    <select id="findAll" resultType="com.edu.cqu.bysj.rfidcar.model.User">
+        select * from user where rolename='USER';
+    </select>
+    <select id="getUserByUsernameAndPassword" resultType="com.edu.cqu.bysj.rfidcar.model.User">
+        select * from user where username=#{username} and password=#{password}
+    </select>
+    <insert id="insert" parameterType="com.edu.cqu.bysj.rfidcar.model.User">
+        INSERT INTO user (username, password,c_id,rfid_id,rolename)
+        VALUES (#{username, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR},#{c_id},#{rfid_id},
+        'USER')
+    </insert>
+    <update id="update" parameterType="com.edu.cqu.bysj.rfidcar.model.User">
+        UPDATE user SET
+        password = #{password, jdbcType=VARCHAR},
+        rfid_id = #{rfid_id, jdbcType=VARCHAR},
+        c_id = #{c_id, jdbcType=DATE}
+        WHERE username = #{username, jdbcType=VARCHAR}
+    </update>
+    <select id="selectbyUsernameAndPsw" resultMap="BaseResultMap" parameterType="com.edu.cqu.bysj.rfidcar.model.User">
+        SELECT * from user where username = #{username, jdbcType=VARCHAR} and password =
+        #{password, jdbcType=VARCHAR}
+    </select>
+    <select id="selectIsName" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT 1 from user where username = #{username, jdbcType=VARCHAR}
+    </select>
+    <select id="findRecordByUsername" resultType="com.edu.cqu.bysj.rfidcar.model.record" parameterType="java.lang.String">
+        select * from record where username = #{username}
+    </select>
+    <insert id="saveRecord" parameterType="com.edu.cqu.bysj.rfidcar.model.record">
+        INSERT INTO record ( rfid_id,username,visit_time,action)
+        VALUES (#{rfid_id, jdbcType=VARCHAR},#{username},#{visit_time},#{action})
+    </insert>
+    <select id="findHistoryTraceInfoByUsername" resultType="com.edu.cqu.bysj.rfidcar.model.historyTraceInfo" parameterType="java.lang.String">
+         select rm.rfid_id,rm.rfid_x,rm.rfid_y,cp.p_name,rm.p_direction,cp.passtime from rfid_monitor rm,car_pass cp ,user where rm.rfid_id= cp.rfid_id and rm.rfid_id = user.rfid_id and rm.rfid_ip=cp.rfid_ip and user.username = #{username} ORDER BY passtime
+    </select>
+    <!--<select id="getPointListByTime" resultType="com.edu.cqu.bysj.rfidcar.model.Point">-->
+        <!--select rm.rfid_x,rm.rfid_y,cp.passtime  from rfid_monitor rm,car_pass cp,user-->
+        <!--<where>-->
+            <!--cp.rfid_id  = rm.rfid_id  and user.username = #{username} and user.rfid_id = cp.rfid_id-->
+            <!--<if test="startTime != null and startTime != ''">AND cp.passtime <![CDATA[>=]]> #{startTime}</if>-->
+            <!--<if test="endTime != null and endTime != ''">AND cp.passtime <![CDATA[<=]]>#{endTime}</if>-->
+        <!--</where>-->
+    <!--</select>-->
+    <select id="getPointListByRfidId" resultType="com.edu.cqu.bysj.rfidcar.model.Point">
+        select rm.rfid_x,rm.rfid_y,cp.passtime,cp.imgurl from rfid_monitor rm,car_pass cp,user
+        where cp.rfid_id  = rm.rfid_id  and user.username = #{username} and user.rfid_id = cp.rfid_id and rm.rfid_ip = cp.rfid_ip order by cp.passtime ASC
+    </select>
+    <!--<select id="getPointListByRfidId" resultType="com.edu.cqu.bysj.rfidcar.model.Point">-->
+        <!--select rm.rfid_x,rm.rfid_y  from rfid_monitor rm,car_pass cp,user-->
+        <!--where cp.rfid_id  = rm.rfid_id  and user.username = #{username} and user.rfid_id = cp.rfid_id and rm.rfid_ip = cp.rfid_ip order by cp.passtime ASC-->
+    <!--</select>-->
+</mapper>

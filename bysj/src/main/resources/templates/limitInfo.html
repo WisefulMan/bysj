@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>limitInfo</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:include="userIndex::userNav"></div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <!--<form class="form-search" th:action="@{admin/userinfo}" >-->
+            <!--<input class="input-medium search-query" type="text"  placeholder="通过username查询用户信息"/> <button type="submit" class="btn">查找</button>-->
+            <!--</form>-->
+            <!--&lt;!&ndash;<form class="form-search" action="@{admin/findCarInfoByTime}">&ndash;&gt;-->
+            <!--<input class="input-medium search-query" type="time"  placeholder="通过时间段查询" name=""/> <button type="submit" class="btn">查找</button>-->
+            <!--</form>-->
+            <table class="table">
+                <th width="15%">id</th>
+                <th width="15%">start_time</th>
+                <th width="15%">end_time</th>
+                <th width="15%">area</th>
+                <!--<th width="8%">point_es_lng</th>-->
+                <!--<th width="8%">point_es_lat</th>-->
+                <!--<th width="8%">point_wn_lng</th>-->
+                <!--<th width="8%">point_wn_lat</th>-->
+                <th width="15%">car_limit_type</th>
+                </thead>
+                <tbody>
+                <tr th:each="carLimit : ${carLimitList}">
+                    <td th:text="${carLimit.id}"></td>
+                    <td th:text="${carLimit.start_time}"></td>
+                    <td th:text="${carLimit.end_time}"></td>
+                    <td th:text="${carLimit.area}"></td>
+                    <td th:text="${carLimit.car_limit_type}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

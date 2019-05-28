@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>carinfo</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <!--<script th:src="@{/My97DatePicker/WdatePicker.js}"></script>-->
+    <!--<script th:src="@{/My97DatePicker/calendar.js}"></script>-->
+</head>
+<body>
+<div th:include="userIndex::userNav"></div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <form class="form-search" th:action="@{/user/historyTraceMap}">
+                <!--<input class="input-medium search-query" type="text"  placeholder="输入username" name="username"/>-->
+                <!--<input class="input-medium search-query" type="text"  placeholder="输入车辆类型" name="c_type"/>-->
+                <input type="datetime-local" placeholder="请输入开始时间"   name="startTime" value="2019-03-30T00:00:00" />
+                <input type="datetime-local" placeholder="请输入截止时间"   name="endTime" value="2017-03-30T00:00:00" />
+                <button type="submit" class="btn">查找</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

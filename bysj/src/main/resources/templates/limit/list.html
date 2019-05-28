@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin::commonHeader('限行信息列表')">
+    <meta charset="UTF-8">
+    <title>限行信息列表</title>
+    <style>
+        table{border-collapse:collapse;}
+        table,th, td{border: 1px solid black;padding: 5px;text-align: center;}
+    </style>
+</head>
+<body>
+<div th:include="admin::adminNav"></div>
+    <br/>
+    <br/>
+    <a href="/admin/limit/edit">新增限行信息</a>
+    <br/>
+    <br/>
+    <table>
+        <thead>
+            <th width="10%">id</th>
+            <th width="10%">start_time</th>
+            <th width="10%">end_time</th>
+            <th width="10%">area</th>
+            <th width="10%">car_limit_type</th>
+            <th width="10%">操作</th>
+        </thead>
+        <tbody>
+            <tr th:each="carLimit : ${limitList}">
+                <td th:text="${carLimit.id}"></td>
+                <td th:text="${carLimit.start_time}"></td>
+                <td th:text="${carLimit.end_time}"></td>
+                <td th:text="${carLimit.area}"></td>
+                <td th:text="${carLimit.car_limit_type}"></td>
+                <td>
+                    <a th:href="@{/admin/limit/edit(id=${carLimit.id})}">编辑</a> &nbsp;&nbsp;
+                    <a th:href="@{/admin/limit/del/{id}(id=${carLimit.id})}">删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

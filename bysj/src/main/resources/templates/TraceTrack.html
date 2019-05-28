@@ -1,0 +1,322 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+        .info_ul {
+            margin: 0 0 5px 0;
+            padding: 0.2em 0;
+        }
+
+        .info_li {
+            line-height: 26px;
+            font-size: 15px;
+        }
+
+        .info_span {
+            width: 50px;
+            display: inline-block;
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=vdicVgDNaGWnq4TLSTfPLIMXxrZkr36K"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+    <title>实时轨迹</title>
+</head>
+<body>
+<div th:include="admin::adminNav"></div>
+<!--<div> <a class="btn btn-sm btn-white btn-block" th:href="@{/admin}" href="admin.html">返回主页</a></div>-->
+<div id="allmap"></div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+
+    // 百度地图API功能
+
+    var map = new BMap.Map("allmap");  // 创建Map实例
+    //数据
+    var pointlist = [[${TraceTrackPoint}]];
+    var points = JSON.parse(pointlist);
+    var pointsLen = points.length;
+
+    var poly = [[${carLimitList}]];
+    var polygon = JSON.parse(poly);
+
+    var datas = [];
+    for(var i =0;i<polygon.length;i++){
+        datas.push(polygon[i].area);
+    }
+
+    map.centerAndZoom(new BMap.Point(103.388611, 35.563611), 10);      // 初始化地点显示中国
+    map.setMapStyle({
+        styleJson:[
+
+            {
+                "featureType": "water",
+                "elementType": "all",
+                "stylers": {
+                    "color": "#72b8fe"
+                }
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry.fill",
+                "stylers": {
+                    "color": "#ffffff"
+                }
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry.stroke",
+                "stylers": {
+                    "color": "#bababa"
+                }
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels.text.fill",
+                "stylers": {
+                    "color": "#767676"
+                }
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels.text.stroke",
+                "stylers": {
+                    "color": "#ffffff"
+                }
+            },
+            {
+                "featureType": "land",
+                "elementType": "all",
+                "stylers": {
+                    "color": "#b8cb93"
+                }
+            }
+        ]
+    });
+    map.addControl(new BMap.NavigationControl());
+    map.addControl(new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT}));
+    map.enableScrollWheelZoom(true);
+    // var pts = [
+    //     new BMap.Point(126.618398,45.721217),
+    //     new BMap.Point(126.64081,45.713008),
+    //     new BMap.Point(126.654694,45.732086),
+    //     new BMap.Point(126.675481,45.738471)
+    // ];
+    var pts = [];
+    for(var i=0;i<points.length;i++){
+        pts.push(new BMap.Point(points[i].rfid_x,points[i].rfid_y));
+    }
+    // alert(pts[0].lng);
+    // alert(pts[2].lng);
+    var polyline ;
+    var options = {
+        onSearchComplete: function(results){
+            if (driving.getStatus() == BMAP_STATUS_SUCCESS){
+                // 获取第一条方案
+                var plan = results.getPlan(0);
+                // 获取方案的驾车线路
+                var route = plan.getRoute(0);
+                //返回路线的地理坐标点数组。（自 1.2 新增）
+                var points = route.getPath();
+                polyline = new BMap.Polyline(points);
+                //alert(points.length);
+                map.addOverlay(polyline);          //增加折线
+            }
+        }
+        //,
+        //renderOptions:{map: map, autoViewport: true}
+    };
+    var driving = new BMap.DrivingRoute(map, options);
+
+
+    i=0;
+    function playLine(i){
+        // for(var i=0 ;i<datas.length;i++){
+            // 创建boundry对象
+
+            // for(var i=0;i<polygon.length;i++) {
+            //     // alert(polygon[i].area);
+            //     var bdary = new BMap.Boundary();
+            //     bdary.get(polygon[i].area, function (rs) {       //获取行政区域
+            //         map.clearOverlays();        //清除地图覆盖物
+            //         var count = rs.boundaries.length; //行政区域的点有多少个
+            //         if (count === 0) {
+            //             alert('未能获取当前输入行政区域');
+            //             return;
+            //         }
+            //         var pointArray = [];
+            //         for (var i = 0; i < count; i++) {
+            //             var ply = new BMap.Polygon(rs.boundaries[i],{strokeWeight: 2, strokeColor: "#ff0000",fillOpacity:0.5,fillColor:"red"}); //建立多边形覆盖物
+            //             map.addOverlay(ply);  //添加覆盖物
+            //             pointArray = pointArray.concat(ply.getPath())
+            //
+            //         }
+            //
+            //         for (var j = 0; j < pointsLen; j++) {
+            //             showWarning(points[j], ply);
+            //             break;
+            //         }
+            //         map.setViewport(pointArray);    //调整视野
+            //         // addlabel();
+            //     });
+            // }
+
+                var bdary = new BMap.Boundary();
+                bdary.get(datas[i], function (rs) {       //获取行政区域
+                    // map.clearOverlays();        //清除地图覆盖物
+                    var count = rs.boundaries.length; //行政区域的点有多少个
+                    if (count === 0) {
+                        // alert('未能获取当前输入行政区域');
+                        return;
+                    }
+                    for (var i = 0; i < count; i++) {
+                        var ply = new BMap.Polygon(rs.boundaries[i],{strokeWeight: 2, strokeColor: "#ff0000",fillOpacity:0.5,fillColor:"red"}); //建立多边形覆盖物
+                        // map.addOverlay(ply);  //添加覆盖物
+                        for (var j = 0; j < pointsLen; j++) {
+                        showWarning(points[j], ply);
+                        break;
+                    }
+                    }
+
+
+                    // map.setViewport(pointArray);    //调整视野
+                    // addlabel();
+                });
+
+            madeBoundary(datas);
+
+            // for(var i =0;i<polygon.length;i++) {
+                if (i == 0) {//第一个点 直接添加
+                    var marker = new BMap.Marker(pts[i]);  // 创建标注
+                    map.addOverlay(marker);
+                    (function () {
+                        var thePoint = points[i];
+                        marker.addEventListener("click", function () {
+                            showInfo(this, thePoint);
+                        });
+                    })();
+                    marker.setLabel(new BMap.Label("我是第" + (i + 1) + "个点", {offset: new BMap.Size(20, -10)}));
+                    map.panTo(pts[i]);
+                    i++;
+                    setTimeout(function () {
+                        playLine(i);
+                    }, 2000)
+                } else {//获取PolyLine并添加 添加点
+                    if (i <= pts.length) {
+                        driving.search(pts[i - 1], pts[i]);
+                        map.addOverlay(polyline);
+                        var marker = new BMap.Marker(pts[i]);  // 创建标注
+                        map.addOverlay(marker);
+                        //给标注点添加点击事件。使用立即执行函数和闭包
+                        (function () {
+                            var thePoint = points[i];
+                            marker.addEventListener("click", function () {
+                                showInfo(this, thePoint);
+                            });
+                        })();
+                        marker.setLabel(new BMap.Label("我是第" + (i + 1) + "个点", {offset: new BMap.Size(20, -10)}));
+                        map.panTo(pts[i]);
+                        i++;
+                        setTimeout(function () {
+                            playLine(i);
+                        }, 2000)
+                    }
+                }
+            // }
+
+    }
+    //显示信息窗口，显示标注点的信息。
+    function showInfo(thisMaker, point) {
+        var sContent =
+            '<ul class="info_ul">'
+            + '<li class="info_li">'
+            + '<span class="info_span">经度：</span>' + point.rfid_x + '</li>'
+            + '<li class="info_li">'
+            + '<span class="info_span">纬度：</span>' + point.rfid_y + '</li>'
+            + '<li class="info_li">'
+            + '<span class="info_span">经过时间：</span>' + point.passtime + '</li>'
+            + "<img style='float:right;margin:4px' id='imgDemo' src='../images/"+point.imgurl+".jpg' width='139' height='104' alt='"+point.imgurl+"'/>"
+            + '</ul>';
+        var infoWindow = new BMap.InfoWindow(sContent);// 创建信息窗口对象
+        thisMaker.openInfoWindow(infoWindow);//图片加载完毕重绘infowindow
+    }
+
+    function getBoundary(data,bdary){
+        bdary.get(data, function(rs){       //获取行政区域
+                var count = rs.boundaries.length; //行政区域的点有多少个
+
+                // var pointArray = [];
+                for (var i = 0; i < count; i++) {
+                    var ply = new BMap.Polygon(rs.boundaries[i], {strokeWeight: 2, strokeColor: "#ff0000",fillOpacity:0.5,fillColor:"red"}); //建立多边形覆盖物
+                    map.addOverlay(ply);  //添加覆盖物
+                    // pointArray = pointArray.concat(ply.getPath());
+                }
+                // map.setViewport(pointArray);
+
+            }
+
+        );
+
+    }
+
+    //区域图
+    function madeBoundary(datas) {
+
+        var bdary = new BMap.Boundary();
+        for(var i=0;i<datas.length;i++){
+            getBoundary(datas[i],bdary);
+
+        }
+
+    }
+
+    //显示警告信息
+    function  showWarning(point,poly3) {
+        // for(var i=0;i<point.length;i++){
+        var point1 = new BMap.Point(point.rfid_x, point.rfid_y);
+        if (BMapLib.GeoUtils.isPointInPolygon(point1, poly3) && point.c_type == "货车" && dateDiff(polygon[0].start_time,point.passtime) < 0 && dateDiff(polygon[0].end_time,point.passtime) > 0 ) {
+            alert("警告：你的车型当前时间被限制进入该城区，请尽快驶离！")
+            // return  true;
+        }
+
+        // }
+
+    }
+    //求时间差的方法
+    function dateDiff(date1, date2) {
+        var type1 = typeof date1, type2 = typeof date2;
+        if (type1 == 'string')
+            date1 = stringToTime(date1);
+        else if (date1.getTime)
+            date1 = date1.getTime();
+        if (type2 == 'string')
+            date2 = stringToTime(date2);
+        else if (date2.getTime)
+            date2 = date2.getTime();
+        return (date1 - date2) / 1000;//结果是秒
+    }
+
+    //字符串转成Time(dateDiff)所需方法
+    function stringToTime(string) {
+        var f = string.split(' ', 2);
+        var d = (f[0] ? f[0] : '').split('-', 3);
+        var t = (f[1] ? f[1] : '').split(':', 3);
+        return (new Date(
+            parseInt(d[0], 10) || null,
+            (parseInt(d[1], 10) || 1) - 1,
+            parseInt(d[2], 10) || null,
+            parseInt(t[0], 10) || null,
+            parseInt(t[1], 10) || null,
+            parseInt(t[2], 10) || null
+        )).getTime();
+
+    }
+
+    playLine(i);
+</script>
+
+</html>

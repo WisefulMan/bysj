@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin::commonHeader('历史轨迹搜索')">
+    <meta charset="utf-8">
+    <title>carinfo</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:include="admin::adminNav"></div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <form class="form-search" th:action="@{/admin/historyTrace}">
+                <input class="input-medium search-query" type="text"  placeholder="输入rfid id" name="rfid_id"/>
+                <!--<input class="input-medium search-query" type="text"  placeholder="输入时间" name="c_type"/>-->
+                <!--<input class="input-medium search-query" type="datetime-local"  placeholder="输入开始时间" name="startTime"/>-->
+                <!--<input class="input-medium search-query" type="datetime-local"  placeholder="输入结束时间" name="endTime"/>-->
+                <button type="submit" class="btn">根据id查找</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

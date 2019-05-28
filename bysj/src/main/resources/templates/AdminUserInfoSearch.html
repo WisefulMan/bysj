@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin::commonHeader('用户信息搜索')">
+    <meta charset="utf-8">
+    <title>carinfo</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:include="admin::adminNav"></div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <form class="form-search" th:action="@{/admin/userinfo}" >
+            <input class="input-medium search-query" type="text"  placeholder="通过username查询用户信息" name="username"/>
+                <button type="submit" class="btn">查找</button>
+            </form>
+            <!--<form class="form-search" action="@{admin/findCarInfoByTime}">-->
+            <!--<input class="input-medium search-query" type="time"  placeholder="通过时间段查询" name=""/> <button type="submit" class="btn">查找</button>-->
+            <!--</form>-->
+            <!--<table class="table">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th>-->
+                        <!--用户名-->
+                    <!--</th>-->
+                    <!--<th>-->
+                        <!--车牌号-->
+                    <!--</th>-->
+                    <!--<th>-->
+                        <!--车类型-->
+                    <!--</th>-->
+                    <!--<th>-->
+                        <!--使用类型-->
+                    <!--</th>-->
+                    <!--<th>-->
+                        <!--RFID标签号-->
+                    <!--</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--<tr>-->
+                    <!--<td th:text="${userinfo.username}"></td>-->
+                    <!--<td th:text="${userinfo.c_id}"></td>-->
+                    <!--<td th:text="${userinfo.c_type}"></td>-->
+                    <!--<td th:text="${userinfo.use_type}"></td>-->
+                    <!--<td th:text="${userinfo.rfid_id}"></td>-->
+                    <!--<td></td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+        </div>
+    </div>
+</div>
+</body>
+</html>

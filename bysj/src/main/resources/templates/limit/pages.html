@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <style>
+        table{border-collapse:collapse;margin-left: auto;margin-right: auto;}
+        table,th, td{border: 1px solid black;padding: 5px;text-align: center;}
+        /*page css*/
+        .margin_tp40 {margin-top:40px;}
+        .eu_turnPage {font-size:0; text-align:center;}
+        .eu_turnPage a {display:inline-block;text-decoration: none; width:45px; height:35px; margin:0 2px; border-radius:3px; background:#fff; border:solid 1px #e0e0e0; font-size:15px; text-align:center; line-height:35px; vertical-align:middle;}
+        .eu_turnPage a.red_bg:hover {color:#fff!important;}
+        .eu_turnPage a:hover {color:#f0503c!important;}
+        .eu_turnPage a.eu_turnPage_txt {background:none; border:none; width:auto; height:35px; cursor:default; color:#666; font-size:13px; font-weight:normal;}
+        .eu_turnPage a.eu_turnPage_txt:hover {color:#666 !important; }
+        .eu_turnPage a.eu_turnPage_input input{border:none; background:none;width:30px; margin:0 auto; height:33px; line-height:33px; text-align:center;}
+        .eu_turnPage a.eu_turnPage_go {background:#ccc; border-color:#ccc;cursor: pointer;width:50px;}
+        .eu_turnPage a.eu_turnPage_go:hover {background:#d8d8d8;}
+        .eu_turnPage a.eu_turnPage_go input {border:none; background:none;width:30px; margin:0 auto; height:33px; line-height:33px; text-align:center; font-weight:bold;}
+        .red_bg {
+            background-color: #0036E0!important;
+            border-color: #0036E0!important;
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body>
+<div th:include="admin::adminNav"></div>
+    <div>
+        <br/>
+        <br/>
+        <div style="text-align: center">
+            <a href="/admin/limit/edit">新增限行信息</a>
+        </div>
+        <br/>
+        <br/>
+        <table>
+            <thead>
+            <th width="15%">id</th>
+            <th width="15%">start_time</th>
+            <th width="15%">end_time</th>
+            <th width="15%">area</th>
+            <!--<th width="8%">point_es_lng</th>-->
+            <!--<th width="8%">point_es_lat</th>-->
+            <!--<th width="8%">point_wn_lng</th>-->
+            <!--<th width="8%">point_wn_lat</th>-->
+            <th width="15%">car_limit_type</th>
+            <th width="15%">操作</th>
+            </thead>
+            <tbody id="customers">
+                <tr th:each="carLimit : ${limitList}">
+                    <td th:text="${carLimit.id}"></td>
+                    <td th:text="${carLimit.start_time}"></td>
+                    <td th:text="${carLimit.end_time}"></td>
+                    <td th:text="${carLimit.area}"></td>
+                    <td th:text="${carLimit.car_limit_type}"></td>
+                    <td>
+                        <a th:href="@{/admin/limit/edit?{id}(id=${carLimit.id})">编辑</a> &nbsp;&nbsp;
+                        <a th:href="@{/admin/limit/del/{id}(id=${carLimit.id})}">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pages tc">
+        <div class="eu_turnPage margin_tp40">
+            <a href="#">&lt;</a>
+            <a href="#">1</a>
+            <a class="eu_turnPage_txt">&hellip;</a>
+            <a href="#">8</a>
+            <a href="#" class="red_bg">9</a>
+            <a href="#">10</a>
+            <a href="#">11</a>
+            <a href="#">12</a>
+            <a class="eu_turnPage_txt">&hellip;</a>
+            <a href="#">16</a>
+            <a href="#">&gt;</a>
+            <a class="eu_turnPage_txt" style="margin-left:10px;">跳转到</a>
+            <a class="eu_turnPage_input"><input type="text" value="" /></a>
+            <a class="eu_turnPage_go"><input style="cursor: pointer;" type="button" value="GO"/></a>
+        </div>
+    </div>
+
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/page.js}"></script>
+    <script>
+        var page , isFirst = true , pageSize = 2;
+        $(function(){
+            page = new ykhPage({pageCount : 1 , pageIndex : 5 });
+            getData();
+        })
+
+        function getData(){
+            var currentPage = isFirst ? 1 :  page.getPageIndex();
+            var datas = {
+                page : { currentPage : currentPage , pageSize : pageSize },
+                param : { }
+            };
+
+            $.ajax({
+                type : "POST" ,
+                url : "/admin/limit/getListPage" ,
+                data : { param : JSON.stringify(datas) } ,
+                success : function (results) {
+                    console.log(results);
+                    if(results && results.list.length > 0){
+                        var html = '';
+                        for(var i=0; i < results.list.length ; i++){
+                            var item = results.list[i]
+                            html +='<tr><td>'+item.id+'</td><td>'+item.start_time+'</td><td>'+item.end_time+'</td><td>'+item.area+'</td><td>'+item.car_limit_type+'</td>\n'+
+                                '                    <td>\n' +
+                                '                        <a href="/admin/limit/edit?id='+item.id+'">编辑</a> &nbsp;&nbsp;\n' +
+                                '                        <a href="/admin/limit/del/'+item.id+'">删除</a>\n' +
+                                '                    </td>\n' +
+                                '                </tr>';
+                        }
+                        $("#customers").html(html);
+                        if(isFirst){
+                            page.initPageCount(results.total , pageSize);
+                            isFirst = false;
+                        }
+                    }
+
+                }
+            })
+        }
+
+        function pageUp(){
+            page.pageUp();
+            getData();
+        }
+        function pagedown(){
+            page.pagedown();
+            getData();
+        }
+        function goPage(){
+            if(parseInt(page.getLocationCount()) <= parseInt(page.getPageCount())){
+                page.goPage();
+                getData();
+            }
+        }
+        function choicePage(t){
+            page.choicePage(t);
+            getData();
+        }
+        function updown(){
+            page.updown();
+            getData();
+        }
+    </script>
+
+</body>
+</html>

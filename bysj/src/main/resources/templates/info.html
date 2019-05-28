@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/StudentScInformation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:include="userIndex::userNav"></div>
+<div class="container">
+    <div class="content">
+        <div class="bx">
+            <div class="box">
+                <div class="top">
+                    <div class="left">当前位置>个人信息</div>
+                    <!--<div class="right">-->
+                        <!--<span id="emit" class="l" style="margin-right: 20px; cursor: pointer;">编辑</span>-->
+                        <!--<span id="keep" class="r" style="cursor: pointer;">保存</span>-->
+                    <!--</div>-->
+                </div>
+                <div class="content">
+                    <div class="left">
+                        <i class="column"></i>
+                        <span class="tit">基础信息</span>
+                    </div>
+                </div>
+                <!--<form action="/user/info" th:action="@{/user/info}" method="post" >-->
+                <div class="bottom">
+                    <ul class="one">
+                        <li>
+                            <span class="l">用户：
+                                    <strong class="font-bold" th:text="${session.user.getUsername()}"></strong>
+                            </span>
+                        </li>
+                        <li>
+                             <span class="l">rfid电子牌号：
+                                    <strong class="font-bold" th:text="${session.user.getRfid_id()}"></strong>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="l">电子车牌号：
+                                    <strong class="font-bold" th:text="${session.user.getC_id()}"></strong>
+                            </span>
+                        </li>
+                        <!--<li>-->
+                            <!--<span>性别：</span>-->
+                            <!--<input type="text" value="男" disabled/>-->
+                        <!--</li>-->
+                    </ul>
+
+                </div>
+                <!--</form>-->
+            </div>
+        </div>
+        <!--<a class="btn btn-sm btn-white btn-block" th:href="@{/user/index}" href="userIndex.html">返回主页</a>-->
+    </div>
+
+</div>
+<!--<script src="js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>-->
+<!--<script type="text/javascript">-->
+    <!--$('#emit').on('click', function () {-->
+        <!--$('input').removeAttr('disabled');-->
+    <!--});-->
+    <!--$('#keep').on('click', function () {-->
+        <!--$('input').attr('disabled', 'disabled');-->
+    <!--});-->
+<!--</script>-->
+</body>
+</html>
